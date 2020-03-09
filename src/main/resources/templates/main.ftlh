@@ -7,13 +7,14 @@
         <span><a href="/user">User list</a></span>
     </div>
     <div>
-    <form method="post">
-        <label>
-            <input type="text" name="solution" placeholder="Введите условие задания"/>
-        </label>
+    <form enctype="multipart/form-data" method="post">
         <label>
             <input type="text" name="title" placeholder="Введите название"/>
         </label>
+        <label>
+            <input type="text" name="solution" placeholder="Введите условие задания"/>
+        </label>
+        <input type="file" name="file">
         <input type="hidden" name="_csrf" value="${_csrf.token}"/>
         <button type="submit">Добавить</button>
     </form>
@@ -30,7 +31,11 @@
             <span>${message.title}</span>
             <i>${message.solution}</i>
             <strong>${message.authorName}</strong>
-        </div>
+            <div>
+                <#if message.filename??>
+                    <img src="/img/${message.filename}">
+                </#if>
+            </div>
     <#else>
         No message
     </#list>

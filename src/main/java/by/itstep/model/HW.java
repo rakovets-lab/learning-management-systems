@@ -17,6 +17,8 @@ public class HW {
     @JoinColumn(name = "user_id")
     @Getter @Setter private User author;
 
+    @Getter @Setter private String filename;
+
     public HW(){
     }
 
@@ -29,29 +31,5 @@ public class HW {
     public String getAuthorName(){
         return author != null ? author.getUsername() : "<none>";
     }
-
-//    public Integer getId() {
-//        return id;
-//    }
-//
-//    public void setId(Integer id) {
-//        this.id = id;
-//    }
-//
-//    public String getTitle() {
-//        return title;
-//    }
-//
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-//
-//    public String getSolution() {
-//        return solution;
-//    }
-//
-//    public void setSolution(String solution) {
-//        this.solution = solution;
-//    }
 
 }
