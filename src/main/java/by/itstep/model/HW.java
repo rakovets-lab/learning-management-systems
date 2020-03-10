@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class HW {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter @Setter private Integer id;
+    @Getter @Setter private Long id;
     @Getter @Setter private String title;
     @Getter @Setter private String solution;
 
