@@ -17,10 +17,10 @@
         <div class="form-group mt-3">
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="text" name="title" placeholder="Введите название"/>
+                    <input type="text" class="form-control" name="title" placeholder="Введите название"/>
                 </div>
                 <div class="form-group">
-                    <input type="text" name="solution" placeholder="Введите условие задания"/>
+                    <input type="text" class="form-control" name="solution" placeholder="Введите условие задания"/>
                 </div>
                 <div class="form-group">
                     <div class="custom-file">
@@ -36,17 +36,17 @@
         </div>
     </div>
     <div class="card-columns">
-        <#list hw as message>
+        <#list hw as task>
             <div class="card my-3">
-                <#if message.filename??>
-                    <img src="/img/${message.filename}" class="card-img-top">
+                <#if task.filename??>
+                    <img src="/img/${task.filename}" class="card-img-top">
                 </#if>
                 <div class="m-2">
-                    <span>${message.title}</span>
-                    <i>${message.solution}</i>
+                    <span>${task.title}</span>
+                    <i>${task.solution}</i>
                 </div>
                 <div class="card-footer text-muted">
-                    ${message.authorName}
+                    ${task.authorName}
                 </div>
             </div>
         <#else>
