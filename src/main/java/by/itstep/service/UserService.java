@@ -75,27 +75,26 @@ public class UserService implements UserDetailsService {
         if (userFromDb != null){
             return false;
         }
-
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
 
         userRepository.save(user);
-
         sendMessage(user);
-
         return true;
     }
 
     private void sendMessage(User user) {
         if (!StringUtils.isEmpty(user.getEmail())){
             String message = String.format(
-                    "Hello, %s! \n" +
-                            "Welcome to Learn management system. Please visit next link: http://localhost:8080/activate/%s",
+                    "Hello, Admin! \n" +
+                    "Someone with username %s and email %s want to registration in Learn management system." +
+                    "Please visit next link to activate this account: http://localhost:8080/activate/%s",
                     user.getUsername(),
+                    user.getEmail(),
                     user.getActivationCode()
             );
-            mailSender.send(user.getEmail(), "Activation code", message);
+            mailSender.send("jura-belkevitsch@mail.ru", "Activation account", message);
         }
     }
 
