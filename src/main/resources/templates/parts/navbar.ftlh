@@ -11,14 +11,21 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/main">Home</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/main">Home work</a>
-            </li>
+            <#if isUser>
+                <li class="nav-item">
+                    <a class="nav-link" href="/main">Home work</a>
+                </li>
+            </#if>
             <#if isAdmin>
                 <li class="nav-item">
                     <a class="nav-link" href="/user">User list</a>
+                </li>
+            </#if>
+            <#if isTeacher>
+                <li class="nav-item">
+                    <a class="nav-link" href="/teacherRoom">Teacher room</a>
                 </li>
             </#if>
             <#if user??&&name!="unknown">

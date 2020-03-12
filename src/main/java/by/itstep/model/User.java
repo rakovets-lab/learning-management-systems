@@ -38,6 +38,14 @@ public class User implements UserDetails {
         return roles.contains(Role.ADMIN);
     }
 
+    public boolean isTeacher(){
+        return roles.contains(Role.TEACHER);
+    }
+
+    public boolean isUser(){
+        return roles.contains(Role.USER);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();

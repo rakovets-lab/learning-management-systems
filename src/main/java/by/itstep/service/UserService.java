@@ -3,9 +3,12 @@ package by.itstep.service;
 import by.itstep.model.Role;
 import by.itstep.model.User;
 import by.itstep.repository.UserRepository;
+import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -15,17 +18,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    private final MailSender mailSender;
+    @Autowired
+    private MailSender mailSender;
 
-    final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, MailSender mailSender, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.mailSender = mailSender;
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Autowired PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws LockedException {
@@ -33,7 +32,7 @@ public class UserService implements UserDetailsService {
         if(user == null){
             throw new LockedException ("User not found");
         }
-        if (user.getActivationCode() == null){
+        if (!user.isActive()){
             throw new LockedException("email not activated");
         }
         return user;
@@ -107,7 +106,7 @@ public class UserService implements UserDetailsService {
                     user.getEmail(),
                     user.getActivationCode()
             );
-            mailSender.send("jura-belkevitsch@mail.ru", "Activation account", message);
+            mailSender.send(user.getEmail(), "Activation account", message);
         }
     }
 
@@ -117,8 +116,7 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             return false;
         }
-        user.setActivationCode(null);
-
+        user.setActive(true);
         userRepository.save(user);
         return false;
     }
