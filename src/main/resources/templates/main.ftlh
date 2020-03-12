@@ -13,14 +13,26 @@
        aria-controls="collapseExample">
         Add new Message
     </a>
-    <div class="collapse" id="collapseExample">
+    <div class="collapse <#if homeWork??>show</#if>" id="collapseExample">
         <div class="form-group mt-3">
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="title" placeholder="Введите название"/>
+                    <input type="text" class="form-control ${(titleError??)?string('is-invalid', '')}"
+                           value="<#if homeWork??>${homeWork.title}</#if>" name="title" placeholder="Введите название"/>
+                    <#if titleError??>
+                        <div class="invalid-feedback">
+                            ${titleError}
+                        </div>
+                    </#if>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="solution" placeholder="Введите условие задания"/>
+                    <input type="text" class="form-control ${(solutionError??)?string('is-invalid', '')}"
+                           value="<#if homeWork??>${homeWork.solution}</#if>" name="solution" placeholder="Введите условие задания"/>
+                    <#if solutionError??>
+                        <div class="invalid-feedback">
+                            ${solutionError}
+                        </div>
+                    </#if>
                 </div>
                 <div class="form-group">
                     <div class="custom-file">
@@ -36,17 +48,17 @@
         </div>
     </div>
     <div class="card-columns">
-        <#list hw as task>
+        <#list homeWorks as homeWork>
             <div class="card my-3">
-                <#if task.filename??>
-                    <img src="/img/${task.filename}" class="card-img-top">
+                <#if homeWork.filename??>
+                    <img src="/img/${homeWork.filename}" class="card-img-top">
                 </#if>
                 <div class="m-2">
-                    <span>${task.title}</span>
-                    <i>${task.solution}</i>
+                    <span>${homeWork.title}</span>
+                    <i>${homeWork.solution}</i>
                 </div>
                 <div class="card-footer text-muted">
-                    ${task.authorName}
+                    ${homeWork.authorName}
                 </div>
             </div>
         <#else>

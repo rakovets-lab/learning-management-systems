@@ -3,11 +3,10 @@ package by.itstep.service;
 import by.itstep.model.Role;
 import by.itstep.model.User;
 import by.itstep.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -16,15 +15,28 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private MailSender mailSender;
+    private final MailSender mailSender;
+
+    final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, MailSender mailSender, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.mailSender = mailSender;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String username) throws LockedException {
+        User user = userRepository.findByUsername(username);
+        if(user == null){
+            throw new LockedException ("User not found");
+        }
+        if (user.getActivationCode() == null){
+            throw new LockedException("email not activated");
+        }
+        return user;
     }
 
     public List<User> findAll() {
@@ -60,7 +72,7 @@ public class UserService implements UserDetailsService {
         }
 
         if (!StringUtils.isEmpty(password)){
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
         }
         userRepository.save(user);
 
@@ -75,9 +87,10 @@ public class UserService implements UserDetailsService {
         if (userFromDb != null){
             return false;
         }
-        user.setActive(true);
+        user.setActive(false);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
         sendMessage(user);

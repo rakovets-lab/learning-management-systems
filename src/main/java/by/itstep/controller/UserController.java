@@ -15,8 +15,11 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")

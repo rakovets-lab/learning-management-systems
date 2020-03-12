@@ -2,15 +2,21 @@ package by.itstep.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class HW {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Getter @Setter private Long id;
+    @NotBlank(message = "Please fill the title")
+    @Length(max = 255, message = "Message too long (more than 2kB)")
     @Getter @Setter private String title;
+    @NotBlank(message = "Please fill the solution")
+    @Length(max = 2048, message = "Message too long (more than 2kB)")
     @Getter @Setter private String solution;
 
     @ManyToOne(fetch = FetchType.EAGER)
