@@ -5,7 +5,10 @@
         <#list homeWorks as homeWork>
             <div class="card my-3">
                 <#if homeWork.filename??>
-                    <img src="/img/${homeWork.filename}" class="card-img-top">
+                    <img src="/img/${homeWork.filename}" class="card-img-top"/>
+                    <div class="m-2">
+                        <a href="/img/${homeWork.filename}">${homeWork.filename} </a>
+                    </div>
                 </#if>
                 <div class="card-footer text-muted">
                     ${homeWork.authorName}
