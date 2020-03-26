@@ -1,11 +1,12 @@
 package by.itstep.controller;
 
 import by.itstep.model.HW;
+import by.itstep.model.Solution;
 import by.itstep.model.User;
 import by.itstep.repository.HwRepository;
-import org.aspectj.bridge.IMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import by.itstep.repository.SolutionRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,17 +20,22 @@ import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Controller
 public class MainController {
     private final HwRepository hwRepository;
+    private final SolutionRepository solutionRepository;
 
-    @Value("${upload.path}")
-    private String uploadPath;
+    @Value("${homeWork.path}")
+    private String homeWorkPath;
+    @Value("${solution.path}")
+    private String solutionPath;
 
-    public MainController(HwRepository hwRepository) {
+    public MainController(HwRepository hwRepository, SolutionRepository solutionRepository) {
         this.hwRepository = hwRepository;
+        this.solutionRepository = solutionRepository;
     }
 
     @GetMapping("/")
@@ -38,60 +44,30 @@ public class MainController {
     }
 
     @GetMapping("/main")
-    public String main(@RequestParam(required = false, defaultValue = "") String filter, Model model) {
+    public String main(Model model) {
         Iterable<HW> homeWorks = hwRepository.findAll();
+        Iterable<Solution> solutions = solutionRepository.findAll();
 
         model.addAttribute("homeWorks", homeWorks);
-        model.addAttribute("filter", filter);
+        model.addAttribute("solutions", solutions);
 
         return "main";
     }
 
-//    @PostMapping("/main")
-//    public String add(
-//            @AuthenticationPrincipal User user,
-//            @Valid HW homeWork,
-//            BindingResult bindingResult,
-//            Model model,
-//            @RequestParam("file") MultipartFile file
-//    ) throws IOException {
-//        homeWork.setAuthor(user);
-//
-//        if (bindingResult.hasErrors()) {
-//            Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
-//            model.mergeAttributes(errorsMap);
-//            model.addAttribute("homeWork", homeWork);
-//        } else {
-//            if (file != null && !file.getOriginalFilename().isEmpty()) {
-//                File uploadDir = new File(uploadPath);
-//
-//                if (!uploadDir.exists()) {
-//                    uploadDir.mkdir();
-//                }
-//
-//                String uuidFile = UUID.randomUUID().toString();
-//                String resultFilename = uuidFile + "." + file.getOriginalFilename();
-//                file.transferTo(new File(uploadPath + "/" + resultFilename));
-//                homeWork.setFilename(resultFilename);
-//            }
-//            model.addAttribute("homeWork", null);
-//            hwRepository.save(homeWork);
-//        }
-//        Iterable<HW> homeWorks = hwRepository.findAll();
-//        model.addAttribute("homeWorks", homeWorks);
-//        return "teacherRoom";
-//    }
-
     @GetMapping("/teacherRoom")
+    @PreAuthorize("hasAuthority('TEACHER')")
     public String room(Model model) {
         Iterable<HW> homeWorks = hwRepository.findAll();
+        Iterable<Solution> solutions = solutionRepository.findAll();
 
         model.addAttribute("homeWorks", homeWorks);
+        model.addAttribute("solutions", solutions);
 
         return "teacherRoom";
     }
 
     @PostMapping("/teacherRoom")
+    @PreAuthorize("hasAuthority('TEACHER')")
     public String addHW(
             @AuthenticationPrincipal User user,
             @Valid HW homeWork,
@@ -106,17 +82,8 @@ public class MainController {
             model.mergeAttributes(errorsMap);
             model.addAttribute("homeWork", homeWork);
         } else {
-            if (file != null && !file.getOriginalFilename().isEmpty()) {
-                File uploadDir = new File(uploadPath);
-
-                if (!uploadDir.exists()) {
-                    uploadDir.mkdir();
-                }
-
-                String uuidFile = UUID.randomUUID().toString();
-                String resultFilename = uuidFile + "." + file.getOriginalFilename();
-                file.transferTo(new File(uploadPath + "/" + resultFilename));
-                homeWork.setFilename(resultFilename);
+            if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
+                homeWork.setFilename(createFile(file, homeWorkPath));
             }
             model.addAttribute("homeWork", null);
             hwRepository.save(homeWork);
@@ -124,5 +91,40 @@ public class MainController {
         Iterable<HW> homeWorks = hwRepository.findAll();
         model.addAttribute("homeWorks", homeWorks);
         return "teacherRoom";
+    }
+
+
+    @PostMapping("/main")
+    @PreAuthorize("hasAuthority('USER')")
+    public String addSolution(
+            @AuthenticationPrincipal User user,
+            @Valid Solution solution,
+            Model model,
+            @RequestParam("file") MultipartFile file
+    ) throws IOException {
+        solution.setAuthor(user);
+
+        if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
+            solution.setFilename(MainController.createFile(file, solutionPath));
+        }
+        solutionRepository.save(solution);
+
+        Iterable<Solution> solutions = solutionRepository.findAll();
+        model.addAttribute("solutions", solutions);
+        return "main";
+    }
+
+
+    static String createFile(@RequestParam("file") MultipartFile file, String solutionPath) throws IOException {
+        File uploadDir = new File(solutionPath);
+
+        if (!uploadDir.exists()) {
+            uploadDir.mkdir();
+        }
+
+        String uuidFile = UUID.randomUUID().toString();
+        String resultFilename = uuidFile + "." + file.getOriginalFilename();
+        file.transferTo(new File(solutionPath + "/" + resultFilename));
+        return resultFilename;
     }
 }

@@ -10,7 +10,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 public class DownloadInitializer implements WebApplicationInitializer {
 
-    public void onStartup(ServletContext container) throws ServletException {
+    public void onStartup(ServletContext container) {
 
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
         ctx.register(DownloadConfig.class);
