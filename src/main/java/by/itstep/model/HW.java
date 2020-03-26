@@ -18,7 +18,7 @@ public class HW {
     @Getter @Setter private String title;
 
     @JoinColumn(name = "user_id")
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @Getter @Setter private User author;
 
     @Getter @Setter private String filename;
