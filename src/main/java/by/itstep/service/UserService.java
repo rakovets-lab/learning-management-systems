@@ -126,10 +126,11 @@ public class UserService implements UserDetailsService {
         return false;
     }
 
-    public void addUserToGroup(User currentUser, Group group) {
-        group.getUsers().add(currentUser);
-
-        groupRepository.save(group);
+    public Group addUserToGroup(User currentUser, Group group) {
+        Group toUpdate = groupRepository.findByGroupId(group.getGroupId())
+                .orElseThrow(() -> new RuntimeException(String.format("Group with id %s not found", group.getGroupId())));
+        toUpdate.getUsers().add(currentUser);
+        return groupRepository.save(group);
     }
 
 }

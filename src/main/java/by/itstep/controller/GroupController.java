@@ -2,6 +2,7 @@ package by.itstep.controller;
 
 import by.itstep.model.Group;
 import by.itstep.model.User;
+import by.itstep.model.dto.AddingUserToGroupDto;
 import by.itstep.repository.GroupRepository;
 import by.itstep.repository.UserRepository;
 import by.itstep.service.UserService;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 
@@ -60,13 +62,12 @@ public class GroupController {
         return "/groupManagement";
     }
 
-    @PostMapping("/addUserToGroup/{group}")
+    @PostMapping("/addUserToGroup")
     @PreAuthorize("hasAnyAuthority('TEACHER')")
     public String addUserToGroup(
-            @PathVariable User currentUser,
-            @PathVariable Group group
+            @RequestBody AddingUserToGroupDto addingUserToGroupDto
     ){
-        userService.addUserToGroup(currentUser, group);
-        return "redirect:/groupManagement/" + group.getGroupId();
+        userService.addUserToGroup(addingUserToGroupDto.getUser(), addingUserToGroupDto.getGroup());
+        return "redirect:/groupManagement/" + addingUserToGroupDto.getGroup().getGroupId();
     }
 }
