@@ -27,6 +27,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/teacherRoom">Teacher room</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/groupManagement">Group management</a>
+                </li>
             </#if>
             <#if user??&&name!="unknown">
                 <li class="nav-item">
@@ -35,7 +39,7 @@
             </#if>
         </ul>
 
-        <div class="navbar-text mr-3">${name}</div>
+        <div class="navbar-text mr-3"><#if user??>${name}<#else>Please, login</#if></div>
         <@l.logout />
     </div>
 </nav>

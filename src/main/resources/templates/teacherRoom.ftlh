@@ -45,6 +45,6 @@
             </#if>
         </div>
     <#else>
-        No file with solution
+        No files with solution
     </#list>
 </@c.page>

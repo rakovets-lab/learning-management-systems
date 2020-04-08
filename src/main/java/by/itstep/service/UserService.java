@@ -1,7 +1,9 @@
 package by.itstep.service;
 
+import by.itstep.model.Group;
 import by.itstep.model.Role;
 import by.itstep.model.User;
+import by.itstep.repository.GroupRepository;
 import by.itstep.repository.UserRepository;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private GroupRepository groupRepository;
 
     @Autowired
     private MailSender mailSender;
@@ -120,4 +125,11 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
         return false;
     }
+
+    public void addUserToGroup(User currentUser, Group group) {
+        group.getUsers().add(currentUser);
+
+        groupRepository.save(group);
+    }
+
 }

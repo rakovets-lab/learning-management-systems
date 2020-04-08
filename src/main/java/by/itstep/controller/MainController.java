@@ -1,8 +1,10 @@
 package by.itstep.controller;
 
+import by.itstep.model.Group;
 import by.itstep.model.HW;
 import by.itstep.model.Solution;
 import by.itstep.model.User;
+import by.itstep.repository.GroupRepository;
 import by.itstep.repository.HwRepository;
 import by.itstep.repository.SolutionRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,7 @@ import java.util.UUID;
 public class MainController {
     private final HwRepository hwRepository;
     private final SolutionRepository solutionRepository;
+
 
     @Value("${homeWork.path}")
     private String homeWorkPath;
@@ -93,14 +96,13 @@ public class MainController {
         return "teacherRoom";
     }
 
-
     @PostMapping("/main")
     @PreAuthorize("hasAuthority('USER')")
     public String addSolution(
             @AuthenticationPrincipal User user,
             @Valid Solution solution,
             Model model,
-            @RequestParam("file") MultipartFile file
+            @RequestParam(value = "file", required = false) MultipartFile file
     ) throws IOException {
         solution.setAuthor(user);
 
