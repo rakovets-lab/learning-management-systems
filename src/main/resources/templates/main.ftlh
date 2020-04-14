@@ -1,38 +1,34 @@
 <#import "parts/common.ftlh" as c>
-<#import "parts/login.ftlh" as l>
+<#include "parts/security.ftlh">
 
 <@c.page>
-    <div>
-        <@l.logout />
-        <span><a href="/user">User list</a></span>
+    <div class="card-columns">
+        <#list homeWorks! as homeWork>
+            <div class="card my-3">
+                <div class="card-footer text-muted">
+                    ${homeWork.authorName}
+                </div>
+                <div class="m-2">
+                    <span>${homeWork.title}</span>
+                </div>
+                <#if homeWork.filename?? && isUser>
+                    <div class="m-2">
+                        <a href="/hw/${homeWork.filename}">${homeWork.filename} </a>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="custom-file">
+                            <input type="file" name="file" id="customFile">
+                            <label class="custom-file-label" for="customFile">Choose file</label>
+                        </div>
+                        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Добавить</button>
+                        </div>
+                    </form>
+                </#if>
+            </div>
+        <#else>
+            No message
+        </#list>
     </div>
-    <div>
-    <form method="post">
-        <label>
-            <input type="text" name="solution" placeholder="Введите условие задания"/>
-        </label>
-        <label>
-            <input type="text" name="title" placeholder="Введите название"/>
-        </label>
-        <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-        <button type="submit">Добавить</button>
-    </form>
-    <div>Список</div>
-    <form method="get" action="/main">
-        <label>
-            <input type="text" name="filter" value="${filter!}" >
-        </label>
-        <button type="submit">Найти</button>
-    </form>
-    <#list hw as message>
-        <div>
-            <b>${message.id}</b>
-            <span>${message.title}</span>
-            <i>${message.solution}</i>
-            <strong>${message.authorName}</strong>
-        </div>
-    <#else>
-        No message
-    </#list>
-    <div/>
 </@c.page>

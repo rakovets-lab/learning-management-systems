@@ -1,34 +1,34 @@
 package by.itstep.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+@Data
 @Entity
-public class HW {
+public class HomeWork {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter @Setter private Long id;
+    private Long hwId;
 
     @NotBlank(message = "Please fill the title")
     @Length(max = 255, message = "Message too long (more than 2kB)")
-    @Getter @Setter private String title;
+    private String title;
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    @Getter @Setter private User author;
+    private User author;
 
-    @Getter @Setter private String filename;
+    private String filename;
 
-    @Getter @Setter private String solution;
+    private String solution;
 
-    public HW(){
+    public HomeWork(){
     }
 
-    public HW(String title, String solution, User user) {
+    public HomeWork(String title, String solution, User user) {
         this.author = user;
         this.title = title;
         this.solution = solution;
