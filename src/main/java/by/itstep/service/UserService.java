@@ -1,30 +1,26 @@
 package by.itstep.service;
 
-import by.itstep.model.Group;
+
 import by.itstep.model.Role;
 import by.itstep.model.User;
-import by.itstep.repository.GroupRepository;
 import by.itstep.repository.UserRepository;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private GroupRepository groupRepository;
 
     @Autowired
     private MailSender mailSender;
@@ -52,6 +48,7 @@ public class UserService implements UserDetailsService {
         Set<String> roles = Arrays.stream(Role.values())
                 .map(Role::name)
                 .collect(Collectors.toSet());
+
 
         user.getRoles().clear();
 
@@ -126,11 +123,14 @@ public class UserService implements UserDetailsService {
         return false;
     }
 
-    public Group addUserToGroup(User currentUser, Group group) {
-        Group toUpdate = groupRepository.findByGroupId(group.getGroupId())
-                .orElseThrow(() -> new RuntimeException(String.format("Group with id %s not found", group.getGroupId())));
-        toUpdate.getUsers().add(currentUser);
-        return groupRepository.save(group);
+    public List<User> loadUserByRole() throws LockedException {
+        List<User> userList = new LinkedList<>();
+        Iterable<User> users = userRepository.findAll();
+        for (User user : users) {
+            if(user.getRoles().contains(Role.USER)){
+                userList.add(user);
+            }
+        }
+        return userList;
     }
-
 }

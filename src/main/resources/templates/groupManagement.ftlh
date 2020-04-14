@@ -14,27 +14,11 @@
         </form>
     </div>
 
-    <div class="container">
-        <form>
-            <div class="form-group">
-                <label for="sel1">Select the group to which you want to add users</label>
-                <select class="form-control" id="sel1">
-                    <#list groups! as group>
-                        <option value="${group.groupId}" name="id">${group.groupName}</option>
-                    </#list>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="sel2">Select user</label>
-                <select class="form-control" id="sel2">
-                    <#list users! as user>
-                        <option value="${user.id}" name="id">${user.username}</option>
-                    </#list>
-                </select>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Добавить</button>
-            </div>
-        </form>
-    </div>
+    <ul class="list-group">
+        <#list groups as group>
+            <li class="list-group-item">
+                <a href="/groupManagement/${group.getGroupId()}">${group.getGroupName()}</a>
+            </li>
+        </#list>
+    </ul>
 </@c.page>

@@ -1,7 +1,9 @@
 package by.itstep.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,36 +14,39 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+@Data
 @Entity
 @Table(name = "usr")
+@EqualsAndHashCode(exclude = "groups")
 public class User implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter @Setter private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
 
     @NotBlank(message = "Username can't be empty")
-    @Getter @Setter private String username;
+    private String username;
     @NotBlank(message = "Password can't be empty")
-    @Getter @Setter private String password;
-    @Getter @Setter private boolean active;
+    private String password;
+    private boolean active;
 
     @Email(message = "Email isn't correct")
     @NotBlank(message = "Email can't be empty")
-    @Getter @Setter private String email;
-    @Getter @Setter private String activationCode;
+    private String email;
+    private String activationCode;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    @Getter @Setter private Set<Role> roles;
+    private Set<Role> roles;
 
-    @ManyToMany
+    @Fetch(value = FetchMode.SELECT)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_group",
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn (name = "group_id")}
     )
-    @Getter @Setter private Set<Group> groups = new HashSet<>();
+    private Set<Group> groups = new HashSet<>();
 
     public boolean isAdmin(){
         return roles.contains(Role.ADMIN);

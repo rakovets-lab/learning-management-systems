@@ -1,22 +1,21 @@
 package by.itstep.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.*;
 
+@Data
 @Entity
 public class Solution {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Getter @Setter private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @JoinColumn(name = "user_id")
     @ManyToOne(fetch = FetchType.EAGER)
-    @Getter @Setter private User author;
+    private User author;
 
-    @Getter @Setter private String filename;
-
+    private String filename;
 
     public Solution(){
     }

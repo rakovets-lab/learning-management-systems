@@ -1,11 +1,9 @@
 package by.itstep.controller;
 
-import by.itstep.model.Group;
-import by.itstep.model.HW;
+import by.itstep.model.HomeWork;
 import by.itstep.model.Solution;
 import by.itstep.model.User;
-import by.itstep.repository.GroupRepository;
-import by.itstep.repository.HwRepository;
+import by.itstep.repository.HomeWorkRepository;
 import by.itstep.repository.SolutionRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +25,7 @@ import java.util.UUID;
 
 @Controller
 public class MainController {
-    private final HwRepository hwRepository;
+    private final HomeWorkRepository homeWorkRepository;
     private final SolutionRepository solutionRepository;
 
 
@@ -36,8 +34,8 @@ public class MainController {
     @Value("${solution.path}")
     private String solutionPath;
 
-    public MainController(HwRepository hwRepository, SolutionRepository solutionRepository) {
-        this.hwRepository = hwRepository;
+    public MainController(HomeWorkRepository homeWorkRepository, SolutionRepository solutionRepository) {
+        this.homeWorkRepository = homeWorkRepository;
         this.solutionRepository = solutionRepository;
     }
 
@@ -48,7 +46,7 @@ public class MainController {
 
     @GetMapping("/main")
     public String main(Model model) {
-        Iterable<HW> homeWorks = hwRepository.findAll();
+        Iterable<HomeWork> homeWorks = homeWorkRepository.findAll();
         Iterable<Solution> solutions = solutionRepository.findAll();
 
         model.addAttribute("homeWorks", homeWorks);
@@ -60,7 +58,7 @@ public class MainController {
     @GetMapping("/teacherRoom")
     @PreAuthorize("hasAuthority('TEACHER')")
     public String room(Model model) {
-        Iterable<HW> homeWorks = hwRepository.findAll();
+        Iterable<HomeWork> homeWorks = homeWorkRepository.findAll();
         Iterable<Solution> solutions = solutionRepository.findAll();
 
         model.addAttribute("homeWorks", homeWorks);
@@ -73,7 +71,7 @@ public class MainController {
     @PreAuthorize("hasAuthority('TEACHER')")
     public String addHW(
             @AuthenticationPrincipal User user,
-            @Valid HW homeWork,
+            @Valid HomeWork homeWork,
             BindingResult bindingResult,
             Model model,
             @RequestParam("file") MultipartFile file
@@ -89,9 +87,9 @@ public class MainController {
                 homeWork.setFilename(createFile(file, homeWorkPath));
             }
             model.addAttribute("homeWork", null);
-            hwRepository.save(homeWork);
+            homeWorkRepository.save(homeWork);
         }
-        Iterable<HW> homeWorks = hwRepository.findAll();
+        Iterable<HomeWork> homeWorks = homeWorkRepository.findAll();
         model.addAttribute("homeWorks", homeWorks);
         return "teacherRoom";
     }
