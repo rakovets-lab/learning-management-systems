@@ -5,9 +5,9 @@
 
     <div class="container">
         <form method="post" enctype="multipart/form-data" xmlns="http://www.w3.org/1999/html">
+            <label for="sel2">Select user to add into the group</label>
             <#list users! as user>
                 <div class="form-group">
-                    <label for="sel2">Select user</label>
                     <select class="form-control" id="sel2">
                         <option value="${user.userId}" name="id">${user.username}</option>
                     </select>
