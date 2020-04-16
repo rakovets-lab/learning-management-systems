@@ -2,6 +2,7 @@ package by.itstep.controller;
 
 import by.itstep.model.Group;
 import by.itstep.model.User;
+import by.itstep.model.dto.AddingUserToGroupDto;
 import by.itstep.repository.GroupRepository;
 import by.itstep.repository.UserRepository;
 import by.itstep.service.GroupService;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,17 +23,17 @@ import java.util.Optional;
 
 @Controller
 public class GroupController {
-    @Autowired
-    private GroupService groupService;
 
+    private final GroupService groupService;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final UserService userService;
 
-    public GroupController(GroupRepository groupRepository, UserRepository userRepository, UserService userService) {
+    public GroupController(GroupRepository groupRepository, UserRepository userRepository, UserService userService, GroupService groupService) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.groupService = groupService;
     }
 
     @GetMapping("/groupManagement")
@@ -52,7 +54,7 @@ public class GroupController {
             @AuthenticationPrincipal User user,
             @Valid Group group,
             Model model
-    ){
+    ) {
         group.setGroupLeader(user);
 
         groupRepository.save(group);
@@ -65,23 +67,16 @@ public class GroupController {
         return "/groupManagement";
     }
 
-    @GetMapping("/joinInto/{group}/{user}")
+    @PostMapping("/group/join")
     @PreAuthorize("hasAnyAuthority('TEACHER')")
-    public String addUserToGroup(
-            @PathVariable Group group,
-            @PathVariable User user
-    ){
-        groupService.addUserToGroup(user, group);
-        return "redirect:/groupManagement/" + group.getGroupId();
+    public String addUserToGroup(AddingUserToGroupDto userDto) {
+        groupService.addUserToGroup(userDto.getUserId(), userDto.getGroupId());
+        return "redirect:/groupManagement/" + userDto.getGroupId();
     }
 
     @GetMapping("/groupManagement/{groupId}/list")
     @PreAuthorize("hasAuthority('TEACHER')")
-    public String groupList(
-            Model model,
-            @PathVariable Long groupId,
-            @PathVariable(required = false) Group group
-    ) {
+    public String groupList(Model model, @PathVariable Long groupId) {
         Group usersFromGroup = groupRepository.findByGroupId(groupId).orElseThrow();
 
         model.addAttribute("usersFromGroup", usersFromGroup);

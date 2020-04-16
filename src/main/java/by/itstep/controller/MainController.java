@@ -1,9 +1,9 @@
 package by.itstep.controller;
 
-import by.itstep.model.HomeWork;
+import by.itstep.model.Homework;
 import by.itstep.model.Solution;
 import by.itstep.model.User;
-import by.itstep.repository.HomeWorkRepository;
+import by.itstep.repository.HomeworkRepository;
 import by.itstep.repository.SolutionRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Controller
 public class MainController {
-    private final HomeWorkRepository homeWorkRepository;
+    private final HomeworkRepository homeWorkRepository;
     private final SolutionRepository solutionRepository;
 
 
@@ -34,7 +34,7 @@ public class MainController {
     @Value("${solution.path}")
     private String solutionPath;
 
-    public MainController(HomeWorkRepository homeWorkRepository, SolutionRepository solutionRepository) {
+    public MainController(HomeworkRepository homeWorkRepository, SolutionRepository solutionRepository) {
         this.homeWorkRepository = homeWorkRepository;
         this.solutionRepository = solutionRepository;
     }
@@ -46,7 +46,7 @@ public class MainController {
 
     @GetMapping("/main")
     public String main(Model model) {
-        Iterable<HomeWork> homeWorks = homeWorkRepository.findAll();
+        Iterable<Homework> homeWorks = homeWorkRepository.findAll();
         Iterable<Solution> solutions = solutionRepository.findAll();
 
         model.addAttribute("homeWorks", homeWorks);
@@ -58,7 +58,7 @@ public class MainController {
     @GetMapping("/teacherRoom")
     @PreAuthorize("hasAuthority('TEACHER')")
     public String room(Model model) {
-        Iterable<HomeWork> homeWorks = homeWorkRepository.findAll();
+        Iterable<Homework> homeWorks = homeWorkRepository.findAll();
         Iterable<Solution> solutions = solutionRepository.findAll();
 
         model.addAttribute("homeWorks", homeWorks);
@@ -71,7 +71,7 @@ public class MainController {
     @PreAuthorize("hasAuthority('TEACHER')")
     public String addHW(
             @AuthenticationPrincipal User user,
-            @Valid HomeWork homeWork,
+            @Valid Homework homeWork,
             BindingResult bindingResult,
             Model model,
             @RequestParam("file") MultipartFile file
@@ -89,7 +89,7 @@ public class MainController {
             model.addAttribute("homeWork", null);
             homeWorkRepository.save(homeWork);
         }
-        Iterable<HomeWork> homeWorks = homeWorkRepository.findAll();
+        Iterable<Homework> homeWorks = homeWorkRepository.findAll();
         model.addAttribute("homeWorks", homeWorks);
         return "teacherRoom";
     }

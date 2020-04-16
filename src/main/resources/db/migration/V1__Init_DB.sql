@@ -1,13 +1,13 @@
 create sequence hibernate_sequence start with 1 increment by 1;
 
-create table hw
+create table home_work
 (
-    hw_id    bigint        not null,
+    homework_id    bigint        not null,
     filename varchar(255),
     solution varchar(2048) not null,
     title    varchar(255),
     user_id  bigint,
-    primary key (hw_id)
+    primary key (homework_id)
 ) engine = InnoDB;
 
 create table user_role
@@ -46,7 +46,7 @@ create table user_group
 
 create table solution
 (
-    id       bigint(20) not null,
+    solution_id       bigint(20) not null,
     filename varchar(255) collate utf8mb4_unicode_ci default null,
     user_id  bigint(20)                              default null
 ) engine = InnoDB
@@ -61,7 +61,7 @@ alter table user_group
     add constraint user_id_group_user_fk
         foreign key (user_id) references usr (user_id);
 
-alter table hw
+alter table home_work
     add constraint hw_user_fk
         foreign key (user_id) references usr (user_id);
 
@@ -70,11 +70,11 @@ alter table user_role
         foreign key (user_id) references usr (user_id);
 
 alter table solution
-    add primary key (id),
+    add primary key (solution_id),
     add key FK9pwmf9mk2ssylkxfjyow4j6o4 (user_id);
 
 alter table solution
-    modify id bigint(20) not null auto_increment;
+    modify solution_id bigint(20) not null auto_increment;
 
 alter table solution
     add constraint FK9pwmf9mk2ssylkxfjyow4j6o4 foreign key (user_id) references usr (user_id);

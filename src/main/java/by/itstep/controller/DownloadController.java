@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class DownloadController {
-    @Autowired
-    ServletContext context;
+    final ServletContext context;
+
+    public DownloadController(ServletContext context) {
+        this.context = context;
+    }
 
     @RequestMapping("/download/{fileName:.+}")
     public void downloader(HttpServletRequest request, HttpServletResponse response,

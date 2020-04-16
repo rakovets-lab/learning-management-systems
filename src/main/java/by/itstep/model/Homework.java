@@ -8,7 +8,8 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 @Entity
-public class HomeWork {
+@Table(name = "home_work")
+public class Homework {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long hwId;
@@ -25,10 +26,10 @@ public class HomeWork {
 
     private String solution;
 
-    public HomeWork(){
+    public Homework(){
     }
 
-    public HomeWork(String title, String solution, User user) {
+    public Homework(String title, String solution, User user) {
         this.author = user;
         this.title = title;
         this.solution = solution;

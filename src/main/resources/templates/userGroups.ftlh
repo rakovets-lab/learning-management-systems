@@ -4,19 +4,20 @@
     <h3>${group.getGroupName()}</h3>
 
     <div class="container">
-        <form method="post" enctype="multipart/form-data" xmlns="http://www.w3.org/1999/html">
+        <form method="post" action="/group/join" xmlns="http://www.w3.org/1999/html">
             <label for="sel2">Select user to add into the group</label>
-            <#list users! as user>
-                <div class="form-group">
-                    <select class="form-control" id="sel2">
+            <div class="form-group">
+                <select name="userId" class="form-control" id="sel2">
+                    <#list users! as user>
                         <option value="${user.userId}" name="id">${user.username}</option>
-                    </select>
-                </div>
-                <div>
-                    <a class="btn btn-info" href="/joinInto/${group.groupId}/${user.userId}">Join into
-                        the ${group.getGroupName()} group</a>
-                </div>
-            </#list>
+                    </#list>
+                </select>
+            </div>
+            <input name="groupId" type="hidden" value="${group.groupId}"/>
+            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+            <div>
+                <button type="submit" class="btn btn-primary">Add user to ${group.getGroupName()}</button>
+            </div>
         </form>
     </div>
 
