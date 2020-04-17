@@ -3,15 +3,22 @@ package by.itstep.model;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
 import javax.validation.constraints.NotBlank;
+import static javax.persistence.GenerationType.AUTO;
 
 @Data
 @Entity
 @Table(name = "home_work")
 public class Homework {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     private Long hwId;
 
     @NotBlank(message = "Please fill the title")
