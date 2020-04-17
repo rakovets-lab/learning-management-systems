@@ -1,13 +1,12 @@
 package by.itstep.controller;
 
-import by.itstep.model.Group;
-import by.itstep.model.User;
+import by.itstep.model.jpa.Group;
+import by.itstep.model.jpa.User;
 import by.itstep.model.dto.AddingUserToGroupDto;
 import by.itstep.repository.GroupRepository;
 import by.itstep.repository.UserRepository;
 import by.itstep.service.GroupService;
 import by.itstep.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -15,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.List;

@@ -1,6 +1,6 @@
 package by.itstep.controller;
 
-import by.itstep.model.User;
+import by.itstep.model.jpa.User;
 import by.itstep.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -75,7 +75,7 @@ public class RegistrationController {
         if (isActivated) {
             model.addAttribute("messageType", "success");
             model.addAttribute("message", "User successfully activated");
-        }else {
+        } else {
             model.addAttribute("messageType", "danger");
             model.addAttribute("message", "Activation code is not found");
         }

@@ -1,29 +1,39 @@
 package by.itstep.service;
 
-
 import by.itstep.model.Role;
-import by.itstep.model.User;
+import by.itstep.model.jpa.User;
 import by.itstep.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static by.itstep.common.Messages.ACTIVATE_ACCOUNT_MESSAGE;
+import static by.itstep.common.Messages.ACTIVATION_MASSAGE;
+import static by.itstep.model.Role.USER;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static java.lang.String.format;
+import static java.util.Arrays.stream;
+import static java.util.UUID.randomUUID;
+import static org.springframework.util.StringUtils.isEmpty;
+import static java.util.Collections.singleton;
 
 @Service
 @Transactional
 public class UserService implements UserDetailsService {
-    private final UserRepository userRepository;
 
-    private final MailSender mailSender;
-
-    final PasswordEncoder passwordEncoder;
+    private UserRepository userRepository;
+    private MailSender mailSender;
+    private PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, MailSender mailSender, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -35,7 +45,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws LockedException {
         User user = userRepository.findByUsername(username);
         if(user == null){
-            throw new LockedException ("User not found");
+            throw new LockedException("User not found");
         }
         if (!user.isActive()){
             throw new LockedException("email not activated");
@@ -49,10 +59,9 @@ public class UserService implements UserDetailsService {
 
     public void saveUser(User user, String username, Map<String, String> form) {
         user.setUsername(username);
-        Set<String> roles = Arrays.stream(Role.values())
+        Set<String> roles = stream(Role.values())
                 .map(Role::name)
                 .collect(Collectors.toSet());
-
 
         user.getRoles().clear();
 
@@ -66,17 +75,16 @@ public class UserService implements UserDetailsService {
 
     public void updateProfile(User user, String password, String email) {
         String userEmail = user.getEmail();
+        boolean isEmailChanged = validationMail(email, userEmail);
 
-        boolean isEmailChanged = (email != null && !email.equals(userEmail)) ||
-                (userEmail != null && !userEmail.equals(email));
         if (isEmailChanged) {
             user.setEmail(email);
-            if (!StringUtils.isEmpty(email)){
-                user.setActivationCode(UUID.randomUUID().toString());
+            if (!isEmpty(email)){
+                user.setActivationCode(randomUUID().toString());
             }
         }
 
-        if (!StringUtils.isEmpty(password)){
+        if (!isEmpty(password)){
             user.setPassword(passwordEncoder.encode(password));
         }
         userRepository.save(user);
@@ -86,52 +94,59 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public boolean addUser(User user){
-        User userFromDb = userRepository.findByUsername(user.getUsername());
+    private boolean validationMail(String email, String userEmail) {
+        //проверь потом (отрабатывает корректно без скобок или нет)!
+        return email != null && !email.equals(userEmail) || userEmail != null && !userEmail.equals(email);
+    }
 
-        if (userFromDb != null){
-            return false;
+    public boolean addUser(User user) {
+        if (validationUser(user)) {
+            user.setActive(false);
+            user.setRoles(singleton(USER));
+            user.setActivationCode(randomUUID().toString());
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+            userRepository.save(user);
+            sendMessage(user);
+            return TRUE;
+        } else {
+            return FALSE;
         }
-        user.setActive(false);
-        user.setRoles(Collections.singleton(Role.USER));
-        user.setActivationCode(UUID.randomUUID().toString());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    }
 
-        userRepository.save(user);
-        sendMessage(user);
-        return true;
+    private boolean validationUser(User user) {
+        return userRepository.findByUsername(user.getUsername()) != null;
     }
 
     private void sendMessage(User user) {
-        if (!StringUtils.isEmpty(user.getEmail())){
-            String message = String.format(
-                    "Hello, Admin! \n" +
-                    "Someone with username %s and email %s want to registration in Learn management system." +
-                    "Please visit next link to activate this account: http://localhost:8080/activate/%s",
-                    user.getUsername(),
-                    user.getEmail(),
-                    user.getActivationCode()
+        if (!isEmpty(user.getEmail())){
+            String message = format(ACTIVATE_ACCOUNT_MESSAGE,
+                user.getUsername(),
+                user.getEmail(),
+                user.getActivationCode()
             );
-            mailSender.send(user.getEmail(), "Activation account", message);
+            mailSender.send(user.getEmail(), ACTIVATION_MASSAGE, message);
         }
     }
 
     public boolean activateUser(String code) {
         User user = userRepository.findByActivationCode(code);
 
-        if (user == null) {
-            return false;
+        if (user != null) {
+            user.setActive(true);
+            userRepository.save(user);
+            return TRUE;
+        } else {
+            return FALSE;
         }
-        user.setActive(true);
-        userRepository.save(user);
-        return false;
     }
 
     public List<User> loadUserByRole() throws LockedException {
         List<User> userList = new LinkedList<>();
         Iterable<User> users = userRepository.findAll();
+
         for (User user : users) {
-            if(user.getRoles().contains(Role.USER)){
+            if(user.getRoles().contains(USER)){
                 userList.add(user);
             }
         }

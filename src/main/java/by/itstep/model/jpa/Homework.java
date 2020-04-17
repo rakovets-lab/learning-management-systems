@@ -1,4 +1,4 @@
-package by.itstep.model;
+package by.itstep.model.jpa;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -11,7 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.validation.constraints.NotBlank;
+
 import static javax.persistence.GenerationType.AUTO;
+import static by.itstep.common.Messages.NONE;
 
 @Data
 @Entity
@@ -43,7 +45,7 @@ public class Homework {
     }
 
     public String getAuthorName(){
-        return author != null ? author.getUsername() : "<none>";
+        return author != null ? author.getUsername() : NONE;
     }
 
 }

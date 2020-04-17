@@ -1,6 +1,6 @@
 package by.itstep.repository;
 
-import by.itstep.model.Group;
+import by.itstep.model.jpa.Group;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

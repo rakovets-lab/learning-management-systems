@@ -1,4 +1,4 @@
-package by.itstep.model;
+package by.itstep.model.jpa;
 
 import lombok.Data;
 

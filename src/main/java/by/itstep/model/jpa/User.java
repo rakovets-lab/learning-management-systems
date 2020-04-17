@@ -1,5 +1,6 @@
-package by.itstep.model;
+package by.itstep.model.jpa;
 
+import by.itstep.model.Role;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Fetch;

@@ -1,6 +1,6 @@
 package by.itstep.repository;
 
-import by.itstep.model.User;
+import by.itstep.model.jpa.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

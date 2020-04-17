@@ -1,8 +1,8 @@
 package by.itstep.controller;
 
-import by.itstep.model.Homework;
-import by.itstep.model.Solution;
-import by.itstep.model.User;
+import by.itstep.model.jpa.Homework;
+import by.itstep.model.jpa.Solution;
+import by.itstep.model.jpa.User;
 import by.itstep.repository.HomeworkRepository;
 import by.itstep.repository.SolutionRepository;
 import org.springframework.beans.factory.annotation.Value;
