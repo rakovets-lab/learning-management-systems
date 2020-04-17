@@ -29,7 +29,8 @@ public class GroupController {
     private final UserRepository userRepository;
     private final UserService userService;
 
-    public GroupController(GroupRepository groupRepository, UserRepository userRepository, UserService userService, GroupService groupService) {
+    public GroupController(GroupRepository groupRepository, UserRepository userRepository,
+                           UserService userService, GroupService groupService) {
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
         this.userService = userService;

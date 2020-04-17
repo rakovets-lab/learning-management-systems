@@ -19,13 +19,17 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserService implements UserDetailsService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private MailSender mailSender;
+    private final MailSender mailSender;
 
-    @Autowired PasswordEncoder passwordEncoder;
+    final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, MailSender mailSender, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.mailSender = mailSender;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws LockedException {

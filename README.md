@@ -13,12 +13,13 @@
 Для запуска приложения необходимо открыть исполняемый файл .jar
 
 ### Создано с помощью 
-* ![alt-текст](https://code.scottshipp.com/wp-content/uploads/2017/09/maven-logo-black-on-white-300x76.png "Maven")
-* ![alt-текст](https://colevit.com/wp-content/uploads/2019/04/Group-242.png "Spring Framework")
-* ![alt-текст](https://flywaydb.org/assets/logo/flyway-logo-tm.png "Flyway")
-* ![alt-текст](https://lh3.googleusercontent.com/proxy/f7JkZB0AcnixytR3Eg-13Ii9FsfWx0zwnTZCbJU0rtn2Z3Yu3S2Mq3cKPTqVvCQFch0WNOeuNcO0Ne8U3iQzOLVS6UTRUHaSzR52ACtRO5B3a0__oBOWkDWuXg "Freemarker")
-* ![alt-текст](https://upload.wikimedia.org/wikipedia/commons/2/22/Hibernate_logo_a.png "Hibernate")
-* ![alt-текст](https://tapen.ru/uploads/mariadb-usa-inc.png "MariaDB")
+ ![alt-текст](https://code.scottshipp.com/wp-content/uploads/2017/09/maven-logo-black-on-white-300x76.png "Maven")
+ ![alt-текст](https://colevit.com/wp-content/uploads/2019/04/Group-242.png "Spring Framework")
+ ![alt-текст](https://flywaydb.org/assets/logo/flyway-logo-tm.png "Flyway")
+ ![alt-текст](https://lh3.googleusercontent.com/proxy/aLyhnucUeYzW3cpFQSNzEvszBI-Schjlkzgo9lW7B393UOUJdEQg90Nr-ZEMpXogCEOMas_xOM0WcjlI6Yzov5KleYFfK-KFl_YrCG1kEAUfi_r-jxRPfzMAWg "Freemarker")
+ ![alt-текст](https://upload.wikimedia.org/wikipedia/commons/2/22/Hibernate_logo_a.png "Hibernate")
+ ![alt-текст](https://tapen.ru/uploads/mariadb-usa-inc.png "MariaDB")
+ ![alt-текст](https://miro.medium.com/max/824/1*9RqBEDU9Mbg6XM8O6d7Q9A.png "Bootstrap")
 
 ### Автор
 * Юрий Белькевич
