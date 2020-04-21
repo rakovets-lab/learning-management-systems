@@ -1,6 +1,7 @@
 package by.itstep.controller;
 
 import by.itstep.model.Role;
+import by.itstep.model.dto.IdDto;
 import by.itstep.model.jpa.User;
 import by.itstep.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -43,6 +44,13 @@ public class UserController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public String userSave(@RequestParam String username, @RequestParam Map<String, String> form, @RequestParam("userId") User user) {
         userService.saveUser(user, username, form);
+        return "redirect:/user";
+    }
+
+    @PostMapping("delete")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String userDelete(IdDto idDto) {
+        userService.deleteUser(idDto.getUserId());
         return "redirect:/user";
     }
 

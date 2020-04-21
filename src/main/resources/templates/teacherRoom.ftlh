@@ -40,7 +40,7 @@
             </div>
             <#if solution.filename?? && isTeacher>
                 <div class="m-2">
-                    <a href="/solution/${solution.filename}">${solution.filename} </a>
+                    <a href="/solution/${solution.filename}">${solution.filename!'file with solution already empty'} </a>
                 </div>
             </#if>
         </div>

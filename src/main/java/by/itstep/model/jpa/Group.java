@@ -29,7 +29,6 @@ public class Group {
     @GeneratedValue(strategy = IDENTITY)
     private Long groupId;
 
-    //??
     private String groupName;
 
     @JoinColumn(name = "group_leader_name")
