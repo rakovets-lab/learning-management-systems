@@ -1,7 +1,7 @@
 ### Learning management system
-The application is for monitoring the assignments progress
+The application is for monitoring the assignments progress. 
 There is a possibility to register new users (initially all of the users have USER access level).
-An account is verified by the link which an administrator receives in his email (without this, account wouldn't be active)
+An account is verified by the link which an administrator receives in his email (without this, account wouldn't be active). 
 Users with administrator access level (ADMIN) can change access level of another account and delete any users.
 Users with teacher access level (TEACHER) have an opportunity to send homework to users (USER), create groups and add users(USERS) to them.
 Users (USER) can add a homework name and attach an answer file.
