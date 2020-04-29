@@ -40,7 +40,8 @@ public class MainController {
     }
 
     @GetMapping("/")
-    public String greeting(Map<String, Object> model) {
+    public String greeting(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("user", user);
         return "greeting";
     }
 

@@ -2,7 +2,7 @@ package by.itstep.controller;
 
 import by.itstep.model.jpa.Group;
 import by.itstep.model.jpa.User;
-import by.itstep.model.dto.AddingUserToGroupDto;
+import by.itstep.model.dto.IdDto;
 import by.itstep.repository.GroupRepository;
 import by.itstep.repository.UserRepository;
 import by.itstep.service.GroupService;
@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -49,11 +50,7 @@ public class GroupController {
 
     @PostMapping("/groupManagement")
     @PreAuthorize("hasAnyAuthority('TEACHER')")
-    public String addGroup(
-            @AuthenticationPrincipal User user,
-            @Valid Group group,
-            Model model
-    ) {
+    public String addGroup(@AuthenticationPrincipal User user, @Valid Group group, Model model) {
         group.setGroupLeader(user);
 
         groupRepository.save(group);
@@ -68,7 +65,7 @@ public class GroupController {
 
     @PostMapping("/group/join")
     @PreAuthorize("hasAnyAuthority('TEACHER')")
-    public String addUserToGroup(AddingUserToGroupDto userDto) {
+    public String addUserToGroup(IdDto userDto) {
         groupService.addUserToGroup(userDto.getUserId(), userDto.getGroupId());
         return "redirect:/groupManagement/" + userDto.getGroupId();
     }
@@ -85,10 +82,7 @@ public class GroupController {
 
     @GetMapping("/groupManagement/{groupId}")
     @PreAuthorize("hasAuthority('TEACHER')")
-    public String userGroup(
-            @PathVariable Long groupId,
-            Model model,
-            @PathVariable(required = false) Group group
+    public String userGroup(@PathVariable Long groupId, Model model, @RequestParam Group group
     ) {
         Optional<Group> currentGroup = groupRepository.findByGroupId(groupId);
         Iterable<Group> groups = groupRepository.findAll();
@@ -96,7 +90,7 @@ public class GroupController {
 
         model.addAttribute("group", currentGroup.orElse(group));
         assert currentGroup.orElse(null) != null;
-        model.addAttribute("subscribersCount", currentGroup.get().getUsers().size());
+        model.addAttribute("studentCount", currentGroup.get().getUsers().size());
         model.addAttribute("groups", groups);
         model.addAttribute("users", users);
 

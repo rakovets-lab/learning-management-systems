@@ -25,9 +25,9 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <div class="card-title">Subscribers</div>
+                    <div class="card-title">Students count in current group</div>
                     <h3 class="card-text">
-                        <a href="/groupManagement/${group.groupId}/list">${subscribersCount}</a>
+                        <a href="/groupManagement/${group.groupId}/list">${studentCount}</a>
                     </h3>
                 </div>
             </div>

@@ -23,8 +23,7 @@ public class DownloadController {
     }
 
     @RequestMapping("/download/{fileName:.+}")
-    public void downloader(HttpServletRequest request, HttpServletResponse response,
-                           @PathVariable("fileName") String fileName) {
+    public void downloader(HttpServletResponse response, @PathVariable("fileName") String fileName) {
         try {
             String downloadFolder = context.getRealPath("/C:/uploads/");
             File file = new File(downloadFolder + File.separator + fileName);

@@ -23,17 +23,17 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
+import static java.util.Collections.singleton;
 import static java.util.UUID.randomUUID;
 import static org.springframework.util.StringUtils.isEmpty;
-import static java.util.Collections.singleton;
 
 @Service
 @Transactional
 public class UserService implements UserDetailsService {
 
-    private UserRepository userRepository;
-    private MailSender mailSender;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final MailSender mailSender;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, MailSender mailSender, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -44,10 +44,10 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws LockedException {
         User user = userRepository.findByUsername(username);
-        if(user == null){
+        if (user == null) {
             throw new LockedException("User not found");
         }
-        if (!user.isActive()){
+        if (!user.isActive()) {
             throw new LockedException("email not activated");
         }
         return user;
@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService {
         user.getRoles().clear();
 
         for (String key : form.keySet()) {
-            if (roles.contains(key)){
+            if (roles.contains(key)) {
                 user.getRoles().add(Role.valueOf(key));
             }
         }
@@ -79,12 +79,13 @@ public class UserService implements UserDetailsService {
 
         if (isEmailChanged) {
             user.setEmail(email);
-            if (!isEmpty(email)){
+            user.setActive(false);
+            if (!isEmpty(email)) {
                 user.setActivationCode(randomUUID().toString());
             }
         }
 
-        if (!isEmpty(password)){
+        if (!isEmpty(password)) {
             user.setPassword(passwordEncoder.encode(password));
         }
         userRepository.save(user);
@@ -95,12 +96,11 @@ public class UserService implements UserDetailsService {
     }
 
     private boolean validationMail(String email, String userEmail) {
-        //проверь потом (отрабатывает корректно без скобок или нет)!
         return email != null && !email.equals(userEmail) || userEmail != null && !userEmail.equals(email);
     }
 
     public boolean addUser(User user) {
-        if (validationUser(user)) {
+        if (!validationUser(user)) {
             user.setActive(false);
             user.setRoles(singleton(USER));
             user.setActivationCode(randomUUID().toString());
@@ -114,16 +114,26 @@ public class UserService implements UserDetailsService {
         }
     }
 
+    public boolean deleteUser(Long userId) {
+        User user = userRepository.findByUserId(userId).orElseThrow();
+        if (validationUser(user)) {
+            userRepository.delete(user);
+            return TRUE;
+        }else {
+            return FALSE;
+        }
+    }
+
     private boolean validationUser(User user) {
         return userRepository.findByUsername(user.getUsername()) != null;
     }
 
     private void sendMessage(User user) {
-        if (!isEmpty(user.getEmail())){
+        if (!isEmpty(user.getEmail())) {
             String message = format(ACTIVATE_ACCOUNT_MESSAGE,
-                user.getUsername(),
-                user.getEmail(),
-                user.getActivationCode()
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getActivationCode()
             );
             mailSender.send(user.getEmail(), ACTIVATION_MASSAGE, message);
         }
@@ -146,7 +156,7 @@ public class UserService implements UserDetailsService {
         Iterable<User> users = userRepository.findAll();
 
         for (User user : users) {
-            if(user.getRoles().contains(USER)){
+            if (user.getRoles().contains(USER)) {
                 userList.add(user);
             }
         }

@@ -10,13 +10,11 @@
         <version>2.2.5.RELEASE</version>
     </parent>
 
-<!--    с маленькой буквы обычно пишут artifactId-->
 
     <groupId>by.itstep</groupId>
-    <artifactId>Learning-management-systems</artifactId>
+    <artifactId>learning-management-systems</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <!--  а имя с большой буквы обычно пишут name-->
     <name>Learning management system</name>
 
     <dependencies>
