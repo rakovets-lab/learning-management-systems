@@ -1,5 +1,6 @@
 ### Learning management system
 The application is for monitoring the assignments progress. 
+
 There is a possibility to register new users (initially all the users have USER access level).
 An account verified by the link which an administrator receives in his email (without this, account wouldn't be active). 
 Users with administrator access level (ADMIN) can change access level of another account and delete any users.
