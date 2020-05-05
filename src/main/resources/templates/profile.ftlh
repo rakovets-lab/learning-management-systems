@@ -1,4 +1,5 @@
 <#import "parts/common.ftlh" as c>
+<#include "parts/security.ftlh">
 
 <@c.page>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -12,11 +13,10 @@
                             <div class="user-info">
                                 <img class="img-profile img-circle img-responsive center-block" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
                                 <ul class="meta list list-unstyled">
-                                    <li class="name">Rebecca Sanders
+                                    <li class="name"><#if user??>${user.username}</#if>
                                         <label class="label label-info">UX Designer</label>
                                     </li>
-                                    <li class="email"><a href="#">Rebecca.S@website.com</a></li>
-                                    <li class="activity">Last logged in: Today at 2:18pm</li>
+                                    <li class="email"><a href="#">${email!''}</a></li>
                                 </ul>
                             </div>
                             <nav class="side-menu">
@@ -25,7 +25,6 @@
                                     <li><a href="#"><span class="fa fa-cog"></span> Settings</a></li>
                                     <li><a href="#"><span class="fa fa-credit-card"></span> Billing</a></li>
                                     <li><a href="#"><span class="fa fa-envelope"></span> Messages</a></li>
-
                                     <li><a href="user-drive.html"><span class="fa fa-th"></span> Drive</a></li>
                                     <li><a href="#"><span class="fa fa-clock-o"></span> Reminders</a></li>
                                 </ul>
@@ -48,7 +47,38 @@
                                     <div class="form-group">
                                         <label class="col-md-2 col-sm-3 col-xs-12 control-label">User Name</label>
                                         <div class="col-md-10 col-sm-9 col-xs-12">
-                                            <input type="text" class="form-control" value=${username}>
+                                            <input type="text" name="username" value=<#if user??>${user.username}</#if>
+                                            class="form-control ${(usernameError??)?string('is-invalid', '')}">
+                                            <#if usernameError??>
+                                                <div class="invalid-feedback">
+                                                    ${usernameError}
+                                                </div>
+                                            </#if>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-sm-3 col-xs-12 control-label">Password</label>
+                                        <div class="col-md-10 col-sm-9 col-xs-12">
+                                            <input type="password" name="password"
+                                                   class="form-control ${(passwordError??)?string('is-invalid', '')}"/>
+                                            <#if passwordError??>
+                                                <div class="invalid-feedback">
+                                                    ${passwordError}
+                                                </div>
+                                            </#if>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="col-md-2 col-sm-3 col-xs-12 control-label">Retype password</label>
+                                        <div class="col-md-10 col-sm-9 col-xs-12">
+                                            <input type="password" name="password2"
+                                                   class="form-control ${(password2Error??)?string('is-invalid', '')}"/>
+                                            <#if password2Error??>
+                                                <div class="invalid-feedback">
+                                                    ${password2Error}
+                                                </div>
+                                            </#if>
                                         </div>
                                     </div>
 
@@ -70,8 +100,14 @@
                                     <div class="form-group">
                                         <label class="col-md-2  col-sm-3 col-xs-12 control-label">Email</label>
                                         <div class="col-md-10 col-sm-9 col-xs-12">
-                                            <input type="email" class="form-control" value=${email!''}>
+                                            <input type="email" name="email" class="form-control ${(emailError??)?string('is-invalid', '')}"
+                                                   value="<#if user??>${user.email}</#if>">
                                             <p class="help-block">This is the email </p>
+                                            <#if emailError??>
+                                                <div class="invalid-feedback">
+                                                    ${emailError}
+                                                </div>
+                                            </#if>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -95,6 +131,7 @@
                                         <input class="btn btn-primary" type="submit" value="Update Profile">
                                     </div>
                                 </div>
+                                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                             </form>
                         </div>
                     </div>

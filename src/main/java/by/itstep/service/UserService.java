@@ -4,11 +4,15 @@ import by.itstep.model.Role;
 import by.itstep.model.jpa.User;
 import by.itstep.repository.UserRepository;
 import org.springframework.security.authentication.LockedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -161,5 +165,19 @@ public class UserService implements UserDetailsService {
             }
         }
         return userList;
+    }
+
+    public boolean isConfirmEmpty(@RequestParam("password2") String passwordConfirm) {
+        return StringUtils.isEmpty(passwordConfirm);
+    }
+
+    public boolean isPasswordDifferent(@RequestParam("password2") String passwordConfirm, @AuthenticationPrincipal User user) {
+        return user.getPassword() != null && !user.getPassword().equals(passwordConfirm);
+    }
+
+    public void passwordConfirmEmpty(@RequestParam("password2") String passwordConfirm, Model model) {
+        if (isConfirmEmpty(passwordConfirm)){
+            model.addAttribute("password2Error", "Password confirmation can't be empty");
+        }
     }
 }

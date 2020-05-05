@@ -8,12 +8,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 @Controller
@@ -58,12 +62,39 @@ public class UserController {
     public String getProfile(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
+        model.addAttribute("message", "");
         return "profile";
     }
 
     @PostMapping("profile")
-    public String updateProfile(@AuthenticationPrincipal User user, @RequestParam String password, @RequestParam String email) {
-        userService.updateProfile(user, password, email);
+    public String updateProfile(
+            @RequestParam("password2") String passwordConfirm,
+            @Valid User user,
+            @AuthenticationPrincipal User currentUser,
+            @RequestParam String password,
+            @RequestParam String email,
+            Model model,
+            BindingResult bindingResult
+    ) {
+        userService.passwordConfirmEmpty(passwordConfirm, model);
+
+        if (userService.isPasswordDifferent(passwordConfirm, user)){
+            bindingResult.addError(new FieldError("user", "password", "Password are different"));
+            model.addAttribute("passwordError", "Password are different");
+            return "profile";
+        }
+
+        if (userService.isConfirmEmpty(passwordConfirm) || bindingResult.hasErrors()) {
+            Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
+
+            model.mergeAttributes(errors);
+
+            return "profile";
+        }
+
+        userService.updateProfile(currentUser, password, email);
         return "redirect:/user/profile";
     }
+
+
 }
