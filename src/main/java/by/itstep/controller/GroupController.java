@@ -70,24 +70,23 @@ public class GroupController {
         return "redirect:/groupManagement/" + userDto.getGroupId();
     }
 
-    @GetMapping("/groupManagement/{groupId}/list")
-    @PreAuthorize("hasAuthority('TEACHER')")
-    public String groupList(Model model, @PathVariable Long groupId) {
-        Group usersFromGroup = groupRepository.findByGroupId(groupId).orElseThrow();
-
-        model.addAttribute("usersFromGroup", usersFromGroup);
-
-        return "groupList";
+    @PostMapping("/group/delete")
+    @PreAuthorize("hasAnyAuthority('TEACHER')")
+    public String deleteUserFromGroup(IdDto userDto) {
+        groupService.deleteUserFromGroup(userDto.getUserId(), userDto.getGroupId());
+        return "redirect:/groupManagement/" + userDto.getGroupId();
     }
 
     @GetMapping("/groupManagement/{groupId}")
     @PreAuthorize("hasAuthority('TEACHER')")
-    public String userGroup(@PathVariable Long groupId, Model model, @RequestParam Group group
+    public String userGroup(@PathVariable Long groupId, Model model, @RequestParam(required = false) Group group
     ) {
         Optional<Group> currentGroup = groupRepository.findByGroupId(groupId);
         Iterable<Group> groups = groupRepository.findAll();
         List<User> users = userService.loadUserByRole();
+        Group usersFromGroup = groupRepository.findByGroupId(groupId).orElseThrow();
 
+        model.addAttribute("usersFromGroup", usersFromGroup);
         model.addAttribute("group", currentGroup.orElse(group));
         assert currentGroup.orElse(null) != null;
         model.addAttribute("studentCount", currentGroup.get().getUsers().size());
@@ -96,4 +95,5 @@ public class GroupController {
 
         return "userGroups";
     }
+
 }

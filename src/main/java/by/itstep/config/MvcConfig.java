@@ -15,6 +15,9 @@ public class MvcConfig implements WebMvcConfigurer {
     @Value("${solution.path}")
     private String solutionPath;
 
+    @Value("${avatar.path}")
+    private String avatarPath;
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
@@ -22,11 +25,9 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("hw/**")
-                .addResourceLocations("file://" + homeWorkPath + "/");
-        registry.addResourceHandler("solution/**")
-                .addResourceLocations("file://" + solutionPath + "/");
-        registry.addResourceHandler("static/**")
-                .addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("hw/**").addResourceLocations("file://" + homeWorkPath + "/");
+        registry.addResourceHandler("solution/**").addResourceLocations("file://" + solutionPath + "/");
+        registry.addResourceHandler("static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("avatar/**").addResourceLocations("file://" + avatarPath + "/");
     }
 }

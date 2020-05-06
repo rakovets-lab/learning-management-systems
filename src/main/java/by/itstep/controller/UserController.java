@@ -4,11 +4,11 @@ import by.itstep.model.Role;
 import by.itstep.model.dto.IdDto;
 import by.itstep.model.jpa.User;
 import by.itstep.service.UserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +16,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
+
+    @Value("${avatar.path}")
+    private String avatarPath;
 
     private final UserService userService;
 
@@ -68,14 +74,15 @@ public class UserController {
 
     @PostMapping("profile")
     public String updateProfile(
+            @AuthenticationPrincipal User currentUser,
             @RequestParam("password2") String passwordConfirm,
             @Valid User user,
-            @AuthenticationPrincipal User currentUser,
-            @RequestParam String password,
-            @RequestParam String email,
+            BindingResult bindingResult,
             Model model,
-            BindingResult bindingResult
-    ) {
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam String password,
+            @RequestParam String email
+    ) throws IOException {
         userService.passwordConfirmEmpty(passwordConfirm, model);
 
         if (userService.isPasswordDifferent(passwordConfirm, user)){
@@ -90,6 +97,10 @@ public class UserController {
             model.mergeAttributes(errors);
 
             return "profile";
+        }
+
+        if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
+            MainController.createFile(file, avatarPath);
         }
 
         userService.updateProfile(currentUser, password, email);

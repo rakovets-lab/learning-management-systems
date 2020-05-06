@@ -4,7 +4,6 @@ import by.itstep.model.Role;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -13,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.ElementCollection;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.CollectionTable;
@@ -26,7 +24,11 @@ import javax.validation.constraints.NotBlank;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
+import static org.hibernate.annotations.FetchMode.SELECT;
 
 @Data
 @Entity
@@ -48,13 +50,13 @@ public class User implements UserDetails {
     private String email;
     private String activationCode;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @ElementCollection(targetClass = Role.class, fetch = EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    @Fetch(value = FetchMode.SELECT)
-    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(value = SELECT)
+    @ManyToMany(fetch = EAGER, cascade = REMOVE)
     @JoinTable(
             name = "user_group",
             joinColumns = {@JoinColumn(name = "user_id")},

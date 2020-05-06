@@ -6,6 +6,8 @@ import by.itstep.repository.GroupRepository;
 import by.itstep.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 
 @Service
@@ -31,5 +33,11 @@ public class GroupService {
         }
 
         groupRepository.save(group);
+    }
+
+    public void deleteUserFromGroup(Long userId, Long groupId) {
+        User user = userRepository.findByUserId(userId).orElseThrow();
+        Group group = groupRepository.findByGroupId(groupId).orElseThrow();
+        group.getUsers().remove(user);
     }
 }

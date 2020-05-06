@@ -11,12 +11,11 @@
                     <div class="module-inner">
                         <div class="side-bar">
                             <div class="user-info">
-                                <img class="img-profile img-circle img-responsive center-block" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                                <img class="img-profile img-circle img-responsive center-block"
+                                     src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
                                 <ul class="meta list list-unstyled">
-                                    <li class="name"><#if user??>${user.username}</#if>
-                                        <label class="label label-info">UX Designer</label>
-                                    </li>
-                                    <li class="email"><a href="#">${email!''}</a></li>
+                                    <li class="name"><#if user??>${user.username}</#if></li>
+                                    <li class="email">${email!''}</li>
                                 </ul>
                             </div>
                             <nav class="side-menu">
@@ -37,12 +36,18 @@
                                     <h3 class="fieldset-title">Personal Info</h3>
                                     <div class="form-group avatar">
                                         <figure class="figure col-md-2 col-sm-3 col-xs-12">
-                                            <img class="img-rounded img-responsive" src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+                                            <img class="img-rounded img-responsive"
+                                                 src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
                                         </figure>
-                                        <div class="form-inline col-md-10 col-sm-9 col-xs-12">
-                                            <input type="file" class="file-uploader pull-left">
-                                            <button type="submit" class="btn btn-sm btn-default-alt pull-left">Update Image</button>
-                                        </div>
+                                        <form action="/user/profile" method="post" enctype="multipart/form-data">
+                                            <div class="form-inline col-md-10 col-sm-9 col-xs-12">
+                                                <input type="file" name="file" id="customFile" class="file-uploader pull-left">
+                                                <button type="submit" class="btn btn-sm btn-default-alt pull-left">
+                                                    Update Image
+                                                </button>
+                                            </div>
+                                            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                                        </form>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-2 col-sm-3 col-xs-12 control-label">User Name</label>
@@ -100,8 +105,10 @@
                                     <div class="form-group">
                                         <label class="col-md-2  col-sm-3 col-xs-12 control-label">Email</label>
                                         <div class="col-md-10 col-sm-9 col-xs-12">
-                                            <input type="email" name="email" class="form-control ${(emailError??)?string('is-invalid', '')}"
-                                                   value="<#if user??>${user.email}</#if>">
+                                            <input type="email" name="email"
+                                                   class="form-control ${(emailError??)?string('is-invalid', '')}"
+                                                   value="<#if user??>${user.email!''}</#if>"
+                                                   placeholder="example@example.com">
                                             <p class="help-block">This is the email </p>
                                             <#if emailError??>
                                                 <div class="invalid-feedback">
@@ -120,7 +127,8 @@
                                     <div class="form-group">
                                         <label class="col-md-2  col-sm-3 col-xs-12 control-label">Linkedin</label>
                                         <div class="col-md-10 col-sm-9 col-xs-12">
-                                            <input type="url" class="form-control" value="https://www.linkedin.com/in/lorem">
+                                            <input type="url" class="form-control"
+                                                   value="https://www.linkedin.com/in/lorem">
                                             <p class="help-block">eg. https://www.linkedin.com/in/yourname</p>
                                         </div>
                                     </div>

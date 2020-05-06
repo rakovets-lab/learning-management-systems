@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import java.util.HashSet;
 import java.util.Set;
 
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static org.hibernate.annotations.FetchMode.SELECT;
@@ -36,7 +37,7 @@ public class Group {
     private User groupLeader;
 
     @Fetch(value = SELECT)
-    @ManyToMany(fetch = EAGER)
+    @ManyToMany(fetch = EAGER, cascade = REMOVE)
     @JoinTable(name = "user_group",
                joinColumns = {@JoinColumn(name = "group_id")},
                inverseJoinColumns = {@JoinColumn (name = "user_id")})
