@@ -4,7 +4,7 @@
 <@c.page>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/css/profile.css" rel="stylesheet">
-    <form method="post" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <form method="post" xmlns="http://www.w3.org/1999/html">
         <div class="container">
             <div class="view-account">
                 <section class="module">
