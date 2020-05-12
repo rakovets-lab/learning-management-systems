@@ -36,15 +36,17 @@
                                     <h3 class="fieldset-title">Personal Info</h3>
                                     <div class="form-group avatar">
                                         <figure class="figure col-md-2 col-sm-3 col-xs-12">
-                                            <img class="img-rounded img-responsive"
-                                                 src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="">
+<#--                                            <img class="img-rounded img-responsive"-->
+<#--                                                 src="${'data:image/png;base64,' + user.getAvatar().getImage()!''}" padding="10px" width="120" alt="">-->
                                         </figure>
                                         <form action="/user/profile" method="post" enctype="multipart/form-data">
                                             <div class="form-inline col-md-10 col-sm-9 col-xs-12">
-                                                <input type="file" name="file" id="customFile" class="file-uploader pull-left">
-                                                <button type="submit" class="btn btn-sm btn-default-alt pull-left">
-                                                    Update Image
-                                                </button>
+                                                <div class="form-group row">
+                                                    <label class="col-md-4 col-form-label">Avatar image:</label>
+                                                    <div class="col-md-8">
+                                                        <input type="file" name="imageFile" class="form-control-file">
+                                                    </div>
+                                                </div>
                                             </div>
                                             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                                         </form>
