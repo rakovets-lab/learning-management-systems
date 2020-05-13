@@ -4,7 +4,7 @@
 <@c.page>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/css/profile.css" rel="stylesheet">
-    <form method="post" xmlns="http://www.w3.org/1999/html">
+    <form method="post" action="/user/profile" enctype="multipart/form-data" xmlns="http://www.w3.org/1999/html">
         <div class="container">
             <div class="view-account">
                 <section class="module">
@@ -36,20 +36,21 @@
                                     <h3 class="fieldset-title">Personal Info</h3>
                                     <div class="form-group avatar">
                                         <figure class="figure col-md-2 col-sm-3 col-xs-12">
-<#--                                            <img class="img-rounded img-responsive"-->
-<#--                                                 src="${'data:image/png;base64,' + user.getAvatar().getImage()!''}" padding="10px" width="120" alt="">-->
+                                            <#--                                            <img class="img-rounded img-responsive"-->
+                                            <#--                                                 src="${'data:image/png;base64,' + user.getAvatar().getImage()!''}" padding="10px" width="120" alt="">-->
                                         </figure>
-                                        <form action="/user/profile" method="post" enctype="multipart/form-data">
-                                            <div class="form-inline col-md-10 col-sm-9 col-xs-12">
-                                                <div class="form-group row">
-                                                    <label class="col-md-4 col-form-label">Avatar image:</label>
-                                                    <div class="col-md-8">
-                                                        <input type="file" name="imageFile" class="form-control-file">
-                                                    </div>
+
+                                        <div class="form-inline col-md-10 col-sm-9 col-xs-12">
+                                            <div class="form-group row">
+                                                <div class="col-md-8">
+                                                    <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                                                    <label class="col-md-4 col-form-label" for="file">Avatar
+                                                        image:</label>
+                                                    <input type="file" name="file" id="file"
+                                                           class="form-control-file">
                                                 </div>
                                             </div>
-                                            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-                                        </form>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-2 col-sm-3 col-xs-12 control-label">User Name</label>

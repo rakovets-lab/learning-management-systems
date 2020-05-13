@@ -83,7 +83,7 @@ public class UserController {
             @Valid User user,
             BindingResult bindingResult,
             Model model,
-            MultipartFile imageFile,
+            @RequestParam MultipartFile file,
             @RequestParam String password,
             @RequestParam String email
     ) throws IOException {
@@ -103,12 +103,18 @@ public class UserController {
             return "profile";
         }
 
-        if (imageFile != null && !Objects.requireNonNull(imageFile.getOriginalFilename()).isEmpty()) {
-            MainController.createFile(imageFile, avatarPath);
-        }
+        //if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
+        //    MainController.createFile(file, avatarPath);
+        //}
 
-        assert imageFile != null;
-        userService.updateProfile(currentUser, password, email, imageFile);
+        assert file != null;
+        userService.updateProfile(currentUser, password, email, file);
+        return "redirect:/user/profile";
+    }
+
+    @PostMapping("image")
+    public String saveImg(String name, MultipartFile imageFile, Model model) throws IOException {
+
         return "redirect:/user/profile";
     }
 
@@ -116,7 +122,7 @@ public class UserController {
     public String showImage(String name, Model model) {
         Image image = imageRepository.findFirstByName(name);
         model.addAttribute("image", image);
-        return "image";
+        return "redirect:/user/profile";
     }
 
 }

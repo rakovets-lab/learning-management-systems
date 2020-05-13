@@ -42,13 +42,13 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final MailSender mailSender;
     private final PasswordEncoder passwordEncoder;
-    private final ImageRepository imageRepositiry;
+    private final ImageRepository imageRepository;
 
     public UserService(UserRepository userRepository, MailSender mailSender, PasswordEncoder passwordEncoder, ImageRepository imageRepositiry) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
         this.passwordEncoder = passwordEncoder;
-        this.imageRepositiry = imageRepositiry;
+        this.imageRepository = imageRepositiry;
     }
 
     @Override
@@ -84,12 +84,13 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateProfile(User user, String password, String email, MultipartFile imageFile) throws IOException {
-
+        Image image = new Image();
+        image.setName(imageFile.getOriginalFilename());
+        byte[] byteImg = imageFile.getBytes();
+        image.setData(byteImg);
+        imageRepository.save(image);
         String userEmail = user.getEmail();
         boolean isEmailChanged = validationMail(email, userEmail);
-        Image avatar = new Image();
-        avatar.setData(imageFile.getBytes());
-        avatar.setName(imageFile.getOriginalFilename());
         if (isEmailChanged) {
             user.setEmail(email);
             user.setActive(false);
