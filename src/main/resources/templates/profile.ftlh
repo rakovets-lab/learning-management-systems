@@ -36,8 +36,8 @@
                                     <h3 class="fieldset-title">Personal Info</h3>
                                     <div class="form-group avatar">
                                         <figure class="figure col-md-2 col-sm-3 col-xs-12">
-                                            <#--                                            <img class="img-rounded img-responsive"-->
-                                            <#--                                                 src="${'data:image/png;base64,' + user.getAvatar().getImage()!''}" padding="10px" width="120" alt="">-->
+                                            <img class="img-rounded img-responsive"
+                                                 src="${'data:image/png;base64,' + currentUser.getAvatar().getPicture()}" height="120" width="120" alt="">
                                         </figure>
 
                                         <div class="form-inline col-md-10 col-sm-9 col-xs-12">

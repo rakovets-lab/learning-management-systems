@@ -103,18 +103,8 @@ public class UserController {
             return "profile";
         }
 
-        //if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
-        //    MainController.createFile(file, avatarPath);
-        //}
-
-        assert file != null;
+        model.addAttribute("currentUser", currentUser);
         userService.updateProfile(currentUser, password, email, file);
-        return "redirect:/user/profile";
-    }
-
-    @PostMapping("image")
-    public String saveImg(String name, MultipartFile imageFile, Model model) throws IOException {
-
         return "redirect:/user/profile";
     }
 

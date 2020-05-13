@@ -89,6 +89,7 @@ public class UserService implements UserDetailsService {
         byte[] byteImg = imageFile.getBytes();
         image.setData(byteImg);
         imageRepository.save(image);
+        user.setAvatar(image);
         String userEmail = user.getEmail();
         boolean isEmailChanged = validationMail(email, userEmail);
         if (isEmailChanged) {
