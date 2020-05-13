@@ -83,7 +83,7 @@ public class UserController {
             @Valid User user,
             BindingResult bindingResult,
             Model model,
-            @RequestParam(value = "file", required = false) MultipartFile file,
+            MultipartFile imageFile,
             @RequestParam String password,
             @RequestParam String email
     ) throws IOException {
@@ -103,11 +103,12 @@ public class UserController {
             return "profile";
         }
 
-        if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
-            MainController.createFile(file, avatarPath);
+        if (imageFile != null && !Objects.requireNonNull(imageFile.getOriginalFilename()).isEmpty()) {
+            MainController.createFile(imageFile, avatarPath);
         }
 
-        userService.updateProfile(currentUser, password, email);
+        assert imageFile != null;
+        userService.updateProfile(currentUser, password, email, imageFile);
         return "redirect:/user/profile";
     }
 

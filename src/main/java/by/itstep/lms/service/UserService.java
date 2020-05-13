@@ -1,7 +1,9 @@
 package by.itstep.lms.service;
 
+import by.itstep.lms.entity.Image;
 import by.itstep.lms.model.Role;
 import by.itstep.lms.entity.User;
+import by.itstep.lms.repository.ImageRepository;
 import by.itstep.lms.repository.UserRepository;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,11 +42,13 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final MailSender mailSender;
     private final PasswordEncoder passwordEncoder;
+    private final ImageRepository imageRepositiry;
 
-    public UserService(UserRepository userRepository, MailSender mailSender, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, MailSender mailSender, PasswordEncoder passwordEncoder, ImageRepository imageRepositiry) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
         this.passwordEncoder = passwordEncoder;
+        this.imageRepositiry = imageRepositiry;
     }
 
     @Override
@@ -77,10 +83,13 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void updateProfile(User user, String password, String email) {
+    public void updateProfile(User user, String password, String email, MultipartFile imageFile) throws IOException {
+
         String userEmail = user.getEmail();
         boolean isEmailChanged = validationMail(email, userEmail);
-
+        Image avatar = new Image();
+        avatar.setData(imageFile.getBytes());
+        avatar.setName(imageFile.getOriginalFilename());
         if (isEmailChanged) {
             user.setEmail(email);
             user.setActive(false);
