@@ -19,10 +19,6 @@ public class Image {
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
     private String name;
-    @Lob
-    private byte[] data;
 
-    public String getPicture(){
-        return Base64.getEncoder().encodeToString(data);
-    }
+    private String path;
 }

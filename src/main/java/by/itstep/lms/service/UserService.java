@@ -84,12 +84,6 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateProfile(User user, String password, String email, MultipartFile imageFile) throws IOException {
-        Image image = new Image();
-        image.setName(imageFile.getOriginalFilename());
-        byte[] byteImg = imageFile.getBytes();
-        image.setData(byteImg);
-        imageRepository.save(image);
-        user.setAvatar(image);
         String userEmail = user.getEmail();
         boolean isEmailChanged = validationMail(email, userEmail);
         if (isEmailChanged) {

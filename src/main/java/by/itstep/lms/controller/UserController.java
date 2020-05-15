@@ -1,5 +1,6 @@
 package by.itstep.lms.controller;
 
+import by.itstep.lms.entity.Homework;
 import by.itstep.lms.entity.Image;
 import by.itstep.lms.entity.User;
 import by.itstep.lms.model.Role;
@@ -85,7 +86,8 @@ public class UserController {
             Model model,
             @RequestParam MultipartFile file,
             @RequestParam String password,
-            @RequestParam String email
+            @RequestParam String email,
+            @Valid Image image
     ) throws IOException {
         userService.passwordConfirmEmpty(passwordConfirm, model);
 
@@ -102,8 +104,16 @@ public class UserController {
 
             return "profile";
         }
+        if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
+            image.setName(MainController.createFile(file, avatarPath));
+            image.setPath(avatarPath);
+            currentUser.setAvatar(image);
+            imageRepository.saveAndFlush(image);
+            Image avatar = imageRepository.findFirstById(currentUser.getAvatar().getId());
+            model.addAttribute("avatar", avatar);
+        }
 
-        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("currentUser", currentUser.getAvatar().getName());
         userService.updateProfile(currentUser, password, email, file);
         return "redirect:/user/profile";
     }

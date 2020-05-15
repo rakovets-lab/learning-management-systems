@@ -37,7 +37,7 @@
                                     <div class="form-group avatar">
                                         <figure class="figure col-md-2 col-sm-3 col-xs-12">
                                             <img class="img-rounded img-responsive"
-                                                 src="${'data:image/png;base64,' + currentUser.getAvatar().getPicture()}" height="120" width="120" alt="">
+                                                 src="/avatar/${avatar.getName()!''}" height="512" width="512" alt="">
                                         </figure>
 
                                         <div class="form-inline col-md-10 col-sm-9 col-xs-12">
