@@ -21,24 +21,6 @@
         </form>
     </div>
 
-    <div class="container">
-        <form method="post" action="/group/delete" xmlns="http://www.w3.org/1999/html">
-            <label for="sel2">Select user to delete from the group</label>
-            <div class="form-group">
-                <select name="userId" class="form-control" id="sel2">
-                    <#list users! as user>
-                        <option value="${user.userId}" name="id">${user.username}</option>
-                    </#list>
-                </select>
-            </div>
-            <input name="groupId" type="hidden" value="${group.groupId}"/>
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-            <div>
-                <button type="submit" class="btn btn-primary">delete user from ${group.getGroupName()}</button>
-            </div>
-        </form>
-    </div>
-
     <div class="container my-3">
         <div class="col">
             <div class="card">

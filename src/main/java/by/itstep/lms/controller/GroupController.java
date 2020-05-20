@@ -38,10 +38,9 @@ public class GroupController {
 
     @GetMapping("/groupManagement")
     @PreAuthorize("hasAuthority('TEACHER')")
-    public String room(Model model) {
-        Iterable<Group> groups = groupRepository.findAll();
+    public String room(@AuthenticationPrincipal User user, Model model) {
+        Iterable<Group> groups = groupRepository.findByGroupLeader(user);
         Iterable<User> users = userRepository.findAll();
-
         model.addAttribute("users", users);
         model.addAttribute("groups", groups);
 
@@ -51,13 +50,13 @@ public class GroupController {
     @PostMapping("/groupManagement")
     @PreAuthorize("hasAnyAuthority('TEACHER')")
     public String addGroup(@AuthenticationPrincipal User user, @Valid Group group, Model model) {
-        group.setGroupLeader(user);
-
-        groupRepository.save(group);
-
-        model.addAttribute("group", group);
-
-        Iterable<Group> groups = groupRepository.findAll();
+        Group group1 = groupRepository.findByGroupName(group.getGroupName());
+        if (!group.getGroupName().equals(group1.getGroupName())) {
+            group.setGroupLeader(user);
+            groupRepository.save(group);
+            model.addAttribute("group", group);
+        }
+        Iterable<Group> groups = groupRepository.findByGroupLeader(user);
         model.addAttribute("groups", groups);
 
         return "/groupManagement";
@@ -67,13 +66,6 @@ public class GroupController {
     @PreAuthorize("hasAnyAuthority('TEACHER')")
     public String addUserToGroup(IdDto userDto) {
         groupService.addUserToGroup(userDto.getUserId(), userDto.getGroupId());
-        return "redirect:/groupManagement/" + userDto.getGroupId();
-    }
-
-    @PostMapping("/group/delete")
-    @PreAuthorize("hasAnyAuthority('TEACHER')")
-    public String deleteUserFromGroup(IdDto userDto) {
-        groupService.deleteUserFromGroup(userDto.getUserId(), userDto.getGroupId());
         return "redirect:/groupManagement/" + userDto.getGroupId();
     }
 

@@ -1,10 +1,10 @@
 package by.itstep.lms.controller;
 
 import by.itstep.lms.entity.User;
+import by.itstep.lms.repository.ImageRepository;
 import by.itstep.lms.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +19,11 @@ import java.util.Map;
 public class RegistrationController {
 
     private final UserService userService;
+    private final ImageRepository imageRepository;
 
-    public RegistrationController(UserService userService) {
+    public RegistrationController(UserService userService, ImageRepository imageRepository) {
         this.userService = userService;
+        this.imageRepository = imageRepository;
     }
 
     @GetMapping("/registration")
@@ -39,6 +41,10 @@ public class RegistrationController {
     ) {
         if (userService.isConfirmEmpty(passwordConfirm)){
             model.addAttribute("password2Error", "Password confirmation can't be empty");
+        }
+
+        if (user.getAvatar()==null) {
+            user.setAvatar(imageRepository.findFirstByName("avatar.png"));
         }
 
         if (userService.isPasswordDifferent(passwordConfirm, user)){

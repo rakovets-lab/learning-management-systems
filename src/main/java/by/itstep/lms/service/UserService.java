@@ -1,6 +1,5 @@
 package by.itstep.lms.service;
 
-import by.itstep.lms.entity.Image;
 import by.itstep.lms.model.Role;
 import by.itstep.lms.entity.User;
 import by.itstep.lms.repository.ImageRepository;
@@ -21,6 +20,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,13 +42,12 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final MailSender mailSender;
     private final PasswordEncoder passwordEncoder;
-    private final ImageRepository imageRepository;
 
-    public UserService(UserRepository userRepository, MailSender mailSender, PasswordEncoder passwordEncoder, ImageRepository imageRepositiry) {
+
+    public UserService(UserRepository userRepository, MailSender mailSender, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
         this.passwordEncoder = passwordEncoder;
-        this.imageRepository = imageRepositiry;
     }
 
     @Override

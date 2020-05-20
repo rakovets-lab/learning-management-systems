@@ -20,12 +20,7 @@
                             </div>
                             <nav class="side-menu">
                                 <ul class="nav">
-                                    <li class="active"><a href="#"><span class="fa fa-user"></span> Profile</a></li>
-                                    <li><a href="#"><span class="fa fa-cog"></span> Settings</a></li>
-                                    <li><a href="#"><span class="fa fa-credit-card"></span> Billing</a></li>
-                                    <li><a href="#"><span class="fa fa-envelope"></span> Messages</a></li>
-                                    <li><a href="user-drive.html"><span class="fa fa-th"></span> Drive</a></li>
-                                    <li><a href="#"><span class="fa fa-clock-o"></span> Reminders</a></li>
+                                    <li class="active"><a href="/user/profile"><span class="fa fa-user"></span> Profile</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -36,8 +31,10 @@
                                     <h3 class="fieldset-title">Personal Info</h3>
                                     <div class="form-group avatar">
                                         <figure class="figure col-md-2 col-sm-3 col-xs-12">
-                                            <img class="img-rounded img-responsive"
-                                                 src="/avatar/${avatar.getName()!''}" height="512" width="512" alt="">
+                                            <#if avatar??>
+                                                <img class="img-rounded img-responsive" src="/avatar/${avatar}"
+                                                     alt="">
+                                            </#if>
                                         </figure>
 
                                         <div class="form-inline col-md-10 col-sm-9 col-xs-12">
@@ -89,19 +86,6 @@
                                             </#if>
                                         </div>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label class="col-md-2 col-sm-3 col-xs-12 control-label">First Name</label>
-                                        <div class="col-md-10 col-sm-9 col-xs-12">
-                                            <input type="text" class="form-control" value="Rebecca">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-2 col-sm-3 col-xs-12 control-label">Last Name</label>
-                                        <div class="col-md-10 col-sm-9 col-xs-12">
-                                            <input type="text" class="form-control" value="Sanders">
-                                        </div>
-                                    </div>
                                 </fieldset>
                                 <fieldset class="fieldset">
                                     <h3 class="fieldset-title">Contact Info</h3>
@@ -112,27 +96,11 @@
                                                    class="form-control ${(emailError??)?string('is-invalid', '')}"
                                                    value="<#if user??>${user.email!''}</#if>"
                                                    placeholder="example@example.com">
-                                            <p class="help-block">This is the email </p>
                                             <#if emailError??>
                                                 <div class="invalid-feedback">
                                                     ${emailError}
                                                 </div>
                                             </#if>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-2  col-sm-3 col-xs-12 control-label">Twitter</label>
-                                        <div class="col-md-10 col-sm-9 col-xs-12">
-                                            <input type="text" class="form-control" value="SpeedyBecky">
-                                            <p class="help-block">Your twitter username</p>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-md-2  col-sm-3 col-xs-12 control-label">Linkedin</label>
-                                        <div class="col-md-10 col-sm-9 col-xs-12">
-                                            <input type="url" class="form-control"
-                                                   value="https://www.linkedin.com/in/lorem">
-                                            <p class="help-block">eg. https://www.linkedin.com/in/yourname</p>
                                         </div>
                                     </div>
                                 </fieldset>

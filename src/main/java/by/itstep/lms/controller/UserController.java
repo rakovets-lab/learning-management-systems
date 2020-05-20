@@ -1,6 +1,5 @@
 package by.itstep.lms.controller;
 
-import by.itstep.lms.entity.Homework;
 import by.itstep.lms.entity.Image;
 import by.itstep.lms.entity.User;
 import by.itstep.lms.model.Role;
@@ -71,10 +70,18 @@ public class UserController {
 
     @GetMapping("profile")
     public String getProfile(Model model, @AuthenticationPrincipal User user) {
+        model.addAttribute("message", "");
+        getAvatar(model, user);
+        return "profile";
+    }
+
+    private void getAvatar(Model model, @AuthenticationPrincipal User user) {
         model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
-        model.addAttribute("message", "");
-        return "profile";
+        if (user.getAvatar() != null){
+            Image avatar = imageRepository.findFirstById(user.getAvatar().getId());
+            model.addAttribute("avatar", avatar.getName());
+        }
     }
 
     @PostMapping("profile")
@@ -109,20 +116,10 @@ public class UserController {
             image.setPath(avatarPath);
             currentUser.setAvatar(image);
             imageRepository.saveAndFlush(image);
-            Image avatar = imageRepository.findFirstById(currentUser.getAvatar().getId());
-            model.addAttribute("avatar", avatar);
         }
 
         model.addAttribute("currentUser", currentUser.getAvatar().getName());
         userService.updateProfile(currentUser, password, email, file);
         return "redirect:/user/profile";
     }
-
-    @GetMapping("image")
-    public String showImage(String name, Model model) {
-        Image image = imageRepository.findFirstByName(name);
-        model.addAttribute("image", image);
-        return "redirect:/user/profile";
-    }
-
 }

@@ -6,8 +6,6 @@ import by.itstep.lms.repository.GroupRepository;
 import by.itstep.lms.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 
 @Service
@@ -26,18 +24,10 @@ public class GroupService {
                 .orElseThrow(() -> new RuntimeException(format("Group with id %s has not found", groupId)));
         User user = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException(format("User with id %s has not found", userId)));
-        // подожди, а что ты тут с ошибкой длеаешь, ты же её ни как не обрабатываешь?!
-        // проверь этот кейс!! потестируй
         if (!group.getUsers().contains(user)){
             group.getUsers().add(user);
         }
 
         groupRepository.save(group);
-    }
-
-    public void deleteUserFromGroup(Long userId, Long groupId) {
-        User user = userRepository.findByUserId(userId).orElseThrow();
-        Group group = groupRepository.findByGroupId(groupId).orElseThrow();
-        group.getUsers().remove(user);
     }
 }
