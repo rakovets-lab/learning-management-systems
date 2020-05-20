@@ -25,12 +25,17 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <div class="card-title">Students count in current group</div>
-                    <h3 class="card-text">
-                        <a href="/groupManagement/${group.groupId}/list">${studentCount}</a>
-                    </h3>
+                    <div class="card-title">Students count in current group: ${studentCount}</div>
+                    <ul class="list-group">
+                        <#list usersFromGroup.getUsers() as user>
+                            <li class="list-group-item">
+                                ${user.username}
+                            </li>
+                        </#list>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
+
 </@c.page>
